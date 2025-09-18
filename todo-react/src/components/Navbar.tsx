@@ -1,5 +1,21 @@
 import React from "react";
+import { addDays, KDate } from "../utils";
 
-export default function Navbar() {
-  return <div>Navbar</div>;
+type Props = {
+  date: Date;
+  setDate: (d: Date) => void;
+};
+
+export default function Navbar({ date, setDate }: Props) {
+  const move = (days: number) => setDate(addDays(date, days));
+
+  return (
+    <>
+      <button onClick={() => move(-7)}>⏮</button>
+      <button onClick={() => move(-1)}>◀</button>
+      <span>{KDate(date)}</span>
+      <button onClick={() => move(1)}>▶</button>
+      <button onClick={() => move(7)}>⏭</button>
+    </>
+  );
 }
