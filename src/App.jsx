@@ -203,6 +203,7 @@ const ListContainer = styled.div`
 const CheckboxButton = styled.input`
   margin-top: 1.5px;
   margin-right: 13px;
+
   transform: scale(1.4);
   accent-color: #808080; /* 체크 시 배경색 기본 파랑->회색 */
 
@@ -213,6 +214,7 @@ const TodoContent = styled.span`
   flex: 1;
   text-align: left;
   word-break: break-all; /* 문자열 길어지면 강제 줄바꿈*/
+  margin-top: -0.1rem;
 
   ${({ checked }) =>
     checked &&
