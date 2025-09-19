@@ -1,5 +1,6 @@
 import GlobalStyle from "./styles/globalStyle";
 import TodoList from "./components/TodoList";
+import { TitleWrapper, TitleText } from "./styles/titleStyle";
 import "./App.css";
 
 function App() {
@@ -7,7 +8,9 @@ function App() {
     <>
       <GlobalStyle />
       <div className="app-container">
-        <h2>투두 리스트</h2>
+        <TitleWrapper>
+          <TitleText>투두 리스트</TitleText>
+        </TitleWrapper>
         <TodoList />
       </div>
     </>
