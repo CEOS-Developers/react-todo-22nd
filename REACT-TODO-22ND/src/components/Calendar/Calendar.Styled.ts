@@ -4,7 +4,7 @@ export const CalendarContainer = styled.div`
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.large};
   box-shadow: ${({ theme }) => theme.shadows.medium};
-  margin: 20px auto;
+  margin: auto;
   padding: 20px;
   max-width: 600px;
   width: 100%;

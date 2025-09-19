@@ -16,8 +16,8 @@ export const ModalContainer = styled.div`
   margin: 15% auto;
   padding: 0;
   border-radius: ${({ theme }) => theme.borderRadius.large};
-  width: 400px;
-`;
+  width: min(90vw, 375px); /* 화면의 90% or 최대 375px */
+  `;
 
 export const ModalHeader = styled.div`
   background: ${({ theme }) => theme.colors.primary};
