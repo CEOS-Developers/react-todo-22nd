@@ -14,6 +14,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   padding: 2rem;
+  padding-bottom: 1.5rem;
 `;
 
 const H1 = styled.h1`
@@ -26,9 +27,11 @@ const Nav = styled.nav`
   justify-content: center;
   padding-bottom: 0.5rem;
   gap: 0.5rem;
+
+  margin-bottom: 0.3rem;
 `;
 
-const PrevButton = styled.button`
+const PrevWeekButton = styled.button`
   position: relative;
   top: -0.05rem;
 
@@ -39,17 +42,45 @@ const PrevButton = styled.button`
   cursor: pointer;
 `;
 
+const PrevButton = styled.button`
+  position: relative;
+  top: -0.05rem;
+  margin-left: -0.5rem;
+
+  border: none;
+  background: none;
+
+  font-weight: 900;
+  cursor: pointer;
+`;
+
 const DateInput = styled.input`
+  position: relative;
+  top: -0.1rem;
+
   border: none;
   font-size: 1rem;
+  font-family: Pretendard, sans-serif;
 
   &::-webkit-calendar-picker-indicator {
-    margin-left: -0.3rem;
+    margin-left: -0.5rem;
     cursor: pointer;
   }
 `;
 
 const NextButton = styled.button`
+  position: relative;
+  top: -0.05rem;
+  margin-right: -0.5rem;
+
+  border: none;
+  background: none;
+
+  font-weight: 900;
+  cursor: pointer;
+`;
+
+const NextWeekButton = styled.button`
   position: relative;
   top: -0.05rem;
 
@@ -61,7 +92,7 @@ const NextButton = styled.button`
 `;
 
 const TodoCount = styled.span`
-  margin-left: 0.5rem;
+  margin-left: 0.3rem;
 `;
 
 const Main = styled.main`
@@ -275,9 +306,11 @@ function App() {
         <H1 onClick={goToday}>Todo-List</H1>
       </Header>
       <Nav>
+        <PrevWeekButton onClick={() => changeDateButton(-7)}>&lt;&lt;</PrevWeekButton>
         <PrevButton onClick={() => changeDateButton(-1)}>&lt;</PrevButton>
         <DateInput type="date" value={currentDate} onChange={changeDateIcon} />
         <NextButton onClick={() => changeDateButton(1)}>&gt;</NextButton>
+        <NextWeekButton onClick={() => changeDateButton(7)}>&gt;&gt;</NextWeekButton>
         <TodoCount>{todoCount} 개</TodoCount>
       </Nav>
       <Main>
