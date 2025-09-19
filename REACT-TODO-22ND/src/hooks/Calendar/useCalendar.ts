@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { TodosState } from '@/types/todoTypes';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { formatDateKorean, createDateKey } from '@/utils/dateUtils';
+import { formatMonthFromDate, createDateKey } from '@/utils/dateUtils';
 import { useTodoModalContext } from '@/contexts/TodoModalContext';
 
 export const useCalendar = () => {
@@ -24,14 +24,14 @@ export const useCalendar = () => {
   // 날짜 클릭 핸들러
   const handleDateClick = (day: number) => {
     const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const dateKey = createDateKey(year, month, day);
+    const month = currentDate.getMonth(); // 0부터 시작
+    const dateKey = createDateKey(year, month, day); // 내부에서 +1 처리됨
     openModal(dateKey);
   };
 
   // 현재 월 제목 가져오기
   const getMonthTitle = () => {
-    return formatDateKorean(currentDate.getFullYear(), currentDate.getMonth());
+    return formatMonthFromDate(currentDate.getFullYear(), currentDate.getMonth());
   };
 
   return {

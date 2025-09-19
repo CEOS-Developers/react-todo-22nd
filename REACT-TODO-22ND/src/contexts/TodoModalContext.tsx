@@ -4,7 +4,7 @@ import type { TodosState, Todo, DateKey } from '@/types/todoTypes';
 import type { ModalState } from '@/types/modalTypes';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { generateId } from '@/utils/idUtils';
-import { formatDateKorean } from '@/utils/dateUtils';
+import { formatDateKeyToKorean } from '@/utils/dateUtils';
 
 // Context 타입 정의
 interface TodoModalContextType {
@@ -128,12 +128,10 @@ export function TodoModalProvider({ children }: TodoModalProviderProps) {
     return todos;
   };
 
-  // 모달 제목 생성 (날짜 포맷팅)
+  // 모달 제목 생성
   const getModalTitle = (): string => {
     if (!modalState.selectedDate) return '';
-    
-    const [year, month, day] = modalState.selectedDate.split('-').map(Number);
-    return formatDateKorean(year, month - 1, day); // month는 1부터 시작하므로 -1
+    return formatDateKeyToKorean(modalState.selectedDate);
   };
 
   // Enter 키 핸들러
