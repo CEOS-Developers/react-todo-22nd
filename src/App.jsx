@@ -1,5 +1,181 @@
 import { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import './App.css';
+
+const Container = styled.div`
+  text-align: center;
+  font-family: Pretendard, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+`;
+
+const H1 = styled.h1`
+  cursor: pointer;
+`;
+
+const Nav = styled.nav`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 0.5rem;
+  gap: 0.5rem;
+`;
+
+const PrevButton = styled.button`
+  position: relative;
+  top: -0.05rem;
+
+  border: none;
+  background: none;
+
+  font-weight: 900;
+  cursor: pointer;
+`;
+
+const DateInput = styled.input`
+  border: none;
+  font-size: 1rem;
+
+  &::-webkit-calendar-picker-indicator {
+    margin-left: -0.3rem;
+    cursor: pointer;
+  }
+`;
+
+const NextButton = styled.button`
+  position: relative;
+  top: -0.05rem;
+
+  border: none;
+  background: none;
+
+  font-weight: 900;
+  cursor: pointer;
+`;
+
+const TodoCount = styled.span`
+  margin-left: 0.5rem;
+`;
+
+const Main = styled.main`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  flex-direction: column;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  padding: 0.5rem;
+  margin-bottom: 0.8rem;
+  width: 100%;
+  max-width: 19.7rem;
+`;
+
+const TodoInput = styled.input`
+  text-align: start;
+  padding: 0.6rem;
+  padding-left: 0.7rem;
+  flex: 1;
+
+  border: 1px solid grey;
+  border-radius: 5px;
+
+  &: placeholder {
+    color: b8b8b8;
+  }
+
+  /* 유효한 값일 때 형제 버튼 스타일 */
+  &:valid + button {
+    color: black;
+    curosr: pointer;
+  }
+
+  /* 무효한 값일 때 형제 버튼 스타일 */
+  &:invalid + button {
+    color: grey;
+    cursor: not-allowed;
+  }
+`;
+
+const AppendButton = styled.button`
+  all: unset; /* 기본 스타일 제거*/
+  position: relative;
+  top: -0.1rem;
+
+  margin-left: 0.9rem;
+  color: grey;
+  font-size: 1.5rem;
+
+  &:hover {
+    color: black;
+    cursor: pointer;
+  }
+`;
+
+const ListContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  padding: 0.1rem 0.3rem;
+  margin-bottom: 10px;
+  margin-left: 1px;
+  width: 20rem;
+`;
+
+const CheckboxButton = styled.input`
+  margin-top: 1.5px;
+  margin-right: 13px;
+  transform: scale(1.4);
+  accent-color: #808080; /* 체크 시 배경색 기본 파랑->회색 */
+
+  cursor: pointer;
+`;
+
+const TodoContent = styled.span`
+  flex: 1;
+  text-align: left;
+  word-break: break-all; /* 문자열 길어지면 강제 줄바꿈*/
+
+  ${({ checked }) =>
+    checked &&
+    `
+      text-decoration: line-through;
+      color: #8b8b8b;
+    `}
+`;
+
+const DeleteButton = styled.button`
+  position: relative;
+  top: -2px;
+  margin-left: 0.9rem;
+
+  font-size: 1.3rem;
+  border: none;
+  background: none;
+
+  cursor: pointer;
+
+  &:hover {
+    color: #d1a29f;
+  }
+
+  ${({ checked }) =>
+    checked &&
+    `
+     color: #8b8b8b;
+    `}
+`;
 
 function App() {
   // 오늘 날짜
@@ -94,54 +270,38 @@ function App() {
   }, [todos]);
 
   return (
-    <>
-      <header>
-        <h1 id="goToday" onClick={goToday}>
-          Todo-List
-        </h1>
-      </header>
-      <nav>
-        <button className="dateButton" id="prevButton" onClick={() => changeDateButton(-1)}>
-          &lt;
-        </button>
-        <input type="date" id="currentDate" value={currentDate} onChange={changeDateIcon} />
-        <button className="dateButton" id="nextButton" onClick={() => changeDateButton(1)}>
-          &gt;
-        </button>
-        <span className="todoCount">{todoCount} 개</span>
-      </nav>
-      <main>
-        <div className="inputContainer">
-          <input
+    <Container>
+      <Header>
+        <H1 onClick={goToday}>Todo-List</H1>
+      </Header>
+      <Nav>
+        <PrevButton onClick={() => changeDateButton(-1)}>&lt;</PrevButton>
+        <DateInput type="date" value={currentDate} onChange={changeDateIcon} />
+        <NextButton onClick={() => changeDateButton(1)}>&gt;</NextButton>
+        <TodoCount>{todoCount} 개</TodoCount>
+      </Nav>
+      <Main>
+        <InputContainer>
+          <TodoInput
             placeholder="할 일을 입력해주세요"
-            id="todoInput"
             value={todoInput}
             onChange={(e) => setTodoInput(e.target.value)}
             onKeyDown={handleKeyDown}
             required
           />
-          <button className="appendTodo" onClick={addTodo}>
-            +
-          </button>
-        </div>
-        <div className="todoListContainer">
-          {list.map((todo, index) => (
-            <div key={index} className="listContainer">
-              <input
-                type="checkbox"
-                className="checkboxButton"
-                checked={todo.checked}
-                onChange={() => toggleTodo(index)}
-              />
-              <span className="todoContent">{todo.todoInputText}</span>
-              <button className="deleteButton" onClick={() => deleteTodo(index)}>
-                x
-              </button>
-            </div>
-          ))}
-        </div>
-      </main>
-    </>
+          <AppendButton onClick={addTodo}>+</AppendButton>
+        </InputContainer>
+        {list.map((todo, index) => (
+          <ListContainer key={index}>
+            <CheckboxButton type="checkbox" checked={todo.checked} onChange={() => toggleTodo(index)} />
+            <TodoContent checked={todo.checked}>{todo.todoInputText}</TodoContent>
+            <DeleteButton checked={todo.checked} onClick={() => deleteTodo(index)}>
+              x
+            </DeleteButton>
+          </ListContainer>
+        ))}
+      </Main>
+    </Container>
   );
 }
 
