@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let todos = {};
 
   // 마지막으로 선택된 날짜 (session 우선, 없으면 local)
-  // const savedDate = localStorage.getItem("lastSelectedDate");
   const savedDate = sessionStorage.getItem("lastSelectedDate");
 
   // 날짜 디폴트값 : 당일
@@ -29,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const defaultDate = `${yyyy}-${mm}-${dd}`;
     currentDate.value = defaultDate;
 
-    // localStorage.setItem('lastSelectedDate', defaultDate);
     sessionStorage.setItem("lastSelectedDate", defaultDate);
 
     loadTodos();
