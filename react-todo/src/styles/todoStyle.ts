@@ -3,8 +3,8 @@ import styled from "styled-components";
 // 전체 투두 리스트 공간
 export const TodoListWrapper = styled.div`
   width: 90%;
-  max-width: 500px;
-  min-width: 500px;
+  max-width: 400px;
+  min-width: 400px;
   min-height: 400px;
   max-height: 400px;
   margin: 20px auto;
@@ -52,7 +52,7 @@ export const TodoText = styled.span`
   text-align: left;
   word-break: break-word;
   overflow-wrap: break-word;
-  padding-right: 40px;
+  padding-right: 10px;
 `;
 
 // 완료 버튼
