@@ -14,12 +14,26 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
+  //투두 추가하기
   const addTodo = () => {
     if (inputValue.trim() === "") return;
-    setTodos([...todos, inputValue]);
+    setTodos([...todos, { text: inputValue, isDone: false }]);
     setInputValue("");
   };
 
+  //투두 삭제하기
+  const deleteTodo = (indexToDelete) => {
+    setTodos(todos.filter((_, idx) => idx !== indexToDelete));
+  };
+
+  //투두 완료표시하기
+  const completeTodo = (index) => {
+    setTodos(
+      todos.map((todo, idx) =>
+        idx === index ? { ...todo, isDone: !todo.isDone } : todo
+      )
+    );
+  };
   return (
     <AppContainer>
       <TodoList>
@@ -37,7 +51,32 @@ function App() {
 
         <ListArea>
           {todos.map((todo, index) => (
-            <TodoItem key={index}>{todo}</TodoItem>
+            <TodoItem
+              key={index}
+              style={{
+                textDecoration: todo.isDone ? "line-through" : "none",
+                color: todo.isDone ? "#aaa" : "inherit",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={todo.isDone}
+                onChange={() => completeTodo(index)}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  marginRight: "1rem",
+                  accentColor: "#6a0dad",
+                }}
+              />
+              {todo.text}
+              <button
+                onClick={() => deleteTodo(index)}
+                style={{ marginLeft: "auto" }}
+              >
+                ❌
+              </button>
+            </TodoItem>
           ))}
         </ListArea>
 
@@ -49,7 +88,7 @@ function App() {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addTodo()}
           />
-          <button onClick={addTodo}>추가</button>
+          <button onClick={addTodo}>Add</button>
         </AddArea>
       </TodoList>
     </AppContainer>
