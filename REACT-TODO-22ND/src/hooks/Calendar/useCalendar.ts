@@ -1,12 +1,9 @@
 import { useState } from 'react';
-import type { TodosState } from '@/types/todoTypes';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { formatMonthFromDate, createDateKey } from '@/utils/dateUtils';
 import { useTodoModalContext } from '@/contexts/TodoModalContext';
 
 export const useCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [todos] = useLocalStorage<TodosState>('todos', {});
 
   // Context에서 모달 열기 함수 가져오기
   const { openModal } = useTodoModalContext();
@@ -36,7 +33,6 @@ export const useCalendar = () => {
 
   return {
     currentDate,
-    todos,
     goToPrevMonth,
     goToNextMonth,
     handleDateClick,
