@@ -17,7 +17,7 @@ export const ModalContainer = styled.div`
   padding: 0;
   border-radius: ${({ theme }) => theme.borderRadius.large};
   width: min(90vw, 375px); /* 화면의 90% or 최대 375px */
-  `;
+`;
 
 export const ModalHeader = styled.div`
   background: ${({ theme }) => theme.colors.primary};
@@ -41,6 +41,16 @@ export const CloseButton = styled.span`
   &:hover {
     opacity: 0.7;
   }
+`;
+
+export const TodoStats = styled.div`
+  padding: 15px 20px;
+  background: ${({ theme }) => theme.colors.lightGray};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray};
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 export const ModalBody = styled.div`

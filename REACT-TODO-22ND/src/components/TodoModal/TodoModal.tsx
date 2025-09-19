@@ -5,6 +5,7 @@ import {
   ModalHeader,
   ModalTitle,
   CloseButton,
+  TodoStats,
   ModalBody,
   TodoList,
   EmptyMessage,
@@ -37,6 +38,8 @@ const TodoModal = () => {
   }
 
   const todos = getCurrentTodos();
+  const completedCount = todos.filter(todo => todo.completed).length;
+  const incompleteCount = todos.filter(todo => !todo.completed).length;
 
   return (
     <ModalOverlay onClick={closeModal}>
@@ -45,6 +48,13 @@ const TodoModal = () => {
           <ModalTitle>{getModalTitle()}</ModalTitle>
           <CloseButton onClick={closeModal}>x</CloseButton>
         </ModalHeader>
+
+        {todos.length > 0 && (
+          <TodoStats>
+            <span>할 일 {incompleteCount}개</span>
+            <span>완료 {completedCount}개</span>
+          </TodoStats>
+        )}
 
         <ModalBody>
           <TodoList>

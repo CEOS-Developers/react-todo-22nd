@@ -15,12 +15,6 @@ export const getIncompleteCount = (todos: Todo[]): number => {
   return todos.filter(todo => !todo.completed).length;
 };
 
-// 할 일 완료율 계산 (0-100)
-export const getCompletionRate = (todos: Todo[]): number => {
-  if (todos.length === 0) return 0;
-  return Math.round((getCompletedCount(todos) / todos.length) * 100);
-};
-
 // 입력값 유효성 검사
 export const validateTodoInput = (input: string): boolean => {
   const trimmed = input.trim();
