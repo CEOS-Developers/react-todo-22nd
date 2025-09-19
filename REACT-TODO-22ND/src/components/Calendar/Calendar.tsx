@@ -9,17 +9,20 @@ import {
 } from '@/components/Calendar/Calendar.Styled';
 import { useCalendar } from '@/hooks/Calendar/useCalendar';
 import { renderCalendarDates } from '@/utils/Calendar/calendarRender';
+import { useTodoModalContext } from '@/contexts/TodoModalContext';
 
 const Calendar = () => {
   const {
     currentDate,
-    todos,
     goToPrevMonth,
     goToNextMonth,
     handleDateClick,
     getMonthTitle
   } = useCalendar();
 
+  // Context에서 todos 가져오기
+  const { getTodos } = useTodoModalContext();
+  
   // 요일 배열
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -44,7 +47,7 @@ const Calendar = () => {
       </Weekdays>
 
       <DatesGrid>
-        {renderCalendarDates(currentDate, todos, handleDateClick)}
+        {renderCalendarDates(currentDate, getTodos(), handleDateClick)}
       </DatesGrid>
     </CalendarContainer>
   );

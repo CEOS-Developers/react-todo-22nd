@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 // localStorage와 동기화되는 state를 제공하는 커스텀 훅
-function useLocalStorageState<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
+function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
   // state 초기화 시 localStorage에서 값 읽어오기
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
@@ -27,4 +27,4 @@ function useLocalStorageState<T>(key: string, initialValue: T): [T, (value: T | 
   return [storedValue, setValue];
 }
 
-export default useLocalStorageState;
+export default useLocalStorage;

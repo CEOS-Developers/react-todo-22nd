@@ -1,11 +1,40 @@
-import { useState } from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { TodosState, Todo, DateKey } from '@/types/todoTypes';
 import type { ModalState } from '@/types/modalTypes';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { generateId } from '@/utils/idUtils';
 import { formatDateKorean } from '@/utils/dateUtils';
 
-export const useTodoModal = () => {
+// Context 타입 정의
+interface TodoModalContextType {
+  // 모달 상태
+  modalState: ModalState;
+  openModal: (dateKey: DateKey) => void;
+  closeModal: () => void;
+  
+  // Todo 관리
+  todoInput: string;
+  setTodoInput: (input: string) => void;
+  addTodo: () => void;
+  toggleTodo: (todoId: string) => void;
+  deleteTodo: (todoId: string) => void;
+  getCurrentTodos: () => Todo[];
+  getTodos: () => TodosState; // Calendar에서 todos 가져오기용
+  getModalTitle: () => string;
+  handleKeyPress: (e: React.KeyboardEvent) => void;
+}
+
+// Context 생성
+const TodoModalContext = createContext<TodoModalContextType | undefined>(undefined);
+
+// Provider Props 타입
+interface TodoModalProviderProps {
+  children: ReactNode;
+}
+
+// Provider 컴포넌트
+export function TodoModalProvider({ children }: TodoModalProviderProps) {
   const [todos, setTodos] = useLocalStorage<TodosState>('todos', {});
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -76,9 +105,9 @@ export const useTodoModal = () => {
 
       // 할 일이 없으면 해당 날짜 키 자체를 삭제
       if (updatedTodos.length === 0) {
-        const newTodos = { ...prevTodos };
-        delete newTodos[modalState.selectedDate!];
-        return newTodos;
+        const { [modalState.selectedDate!]: _, ...rest } = prevTodos;
+        void _;
+        return rest;
       }
 
       return {
@@ -92,6 +121,11 @@ export const useTodoModal = () => {
   const getCurrentTodos = (): Todo[] => {
     if (!modalState.selectedDate) return [];
     return todos[modalState.selectedDate] || [];
+  };
+
+  // 전체 todos 가져오기 (Calendar에서 사용)
+  const getTodos = (): TodosState => {
+    return todos;
   };
 
   // 모달 제목 생성 (날짜 포맷팅)
@@ -109,17 +143,36 @@ export const useTodoModal = () => {
     }
   };
 
-  return {
+  const contextValue: TodoModalContextType = {
     modalState,
-    todoInput,
-    setTodoInput,
     openModal,
     closeModal,
+    todoInput,
+    setTodoInput,
     addTodo,
     toggleTodo,
     deleteTodo,
     getCurrentTodos,
+    getTodos,
     getModalTitle,
     handleKeyPress
   };
+
+  return (
+    <TodoModalContext.Provider value={contextValue}>
+      {children}
+    </TodoModalContext.Provider>
+  );
+}
+
+// Context 사용을 위한 커스텀 훅
+// eslint-disable-next-line react-refresh/only-export-components
+export const useTodoModalContext = (): TodoModalContextType => {
+  const context = useContext(TodoModalContext);
+
+  if (context === undefined) {
+    throw new Error('useTodoModalContext는 TodoModalProvider 내부에서 사용되어야 합니다');
+  }
+
+  return context;
 };

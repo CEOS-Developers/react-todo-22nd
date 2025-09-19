@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-export const ModalOverlay = styled.div<{ $isOpen: boolean }>`
-  display: ${({ $isOpen }) => $isOpen ? 'block' : 'none'};
+export const ModalOverlay = styled.div`
+  display: block;
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -11,13 +11,12 @@ export const ModalOverlay = styled.div<{ $isOpen: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
-export const ModalContent = styled.div`
+export const ModalContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   margin: 15% auto;
   padding: 0;
   border-radius: ${({ theme }) => theme.borderRadius.large};
   width: 400px;
-  box-shadow: ${({ theme }) => theme.shadows.medium};
 `;
 
 export const ModalHeader = styled.div`
@@ -32,14 +31,12 @@ export const ModalHeader = styled.div`
 
 export const ModalTitle = styled.h3`
   margin: 0;
-  font-size: 1.2rem;
 `;
 
 export const CloseButton = styled.span`
   color: ${({ theme }) => theme.colors.white};
   font-size: 24px;
   cursor: pointer;
-  user-select: none;
 
   &:hover {
     opacity: 0.7;
@@ -59,7 +56,6 @@ export const TodoList = styled.div`
 export const EmptyMessage = styled.p`
   text-align: center;
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-style: italic;
 `;
 
 export const TodoItem = styled.div<{ $completed: boolean }>`
@@ -80,7 +76,7 @@ export const TodoText = styled.div<{ $completed: boolean }>`
   text-align: left;
   text-decoration: ${({ $completed }) => $completed ? 'line-through' : 'none'};
   color: ${({ theme, $completed }) => 
-    $completed ? theme.colors.text.disabled : theme.colors.text.primary
+    $completed ? theme.colors.darkGray : theme.colors.text.primary
   };
 `;
 
@@ -89,10 +85,22 @@ export const TodoActions = styled.div`
   gap: 5px;
 `;
 
-export const ActionButton = styled.button<{ $variant: 'complete' | 'delete' }>`
-  background: ${({ theme, $variant }) => 
-    $variant === 'complete' ? theme.colors.primary : theme.colors.red
-  };
+export const ToggleButton = styled.button<{ $completed: boolean }>`
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.small};
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+export const DeleteButton = styled.button`
+  background: ${({ theme }) => theme.colors.red};
   color: ${({ theme }) => theme.colors.white};
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.small};
@@ -118,11 +126,6 @@ export const TodoInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.gray};
   border-radius: ${({ theme }) => theme.borderRadius.large};
   font-size: 16px;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
 `;
 
 export const AddButton = styled.button`
@@ -137,10 +140,5 @@ export const AddButton = styled.button`
 
   &:hover {
     background: ${({ theme }) => theme.colors.primaryDark};
-  }
-
-  &:disabled {
-    background: ${({ theme }) => theme.colors.gray};
-    cursor: not-allowed;
   }
 `;
