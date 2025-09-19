@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import './App.css';
+import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { lightTheme, darkTheme } from './Theme';
+
+const GlobalStyle = createGlobalStyle`
+  body{
+    background-color: ${(props) => props.theme.background};
+    color: ${(props) => props.theme.color};
+    font-family: Pretendard, sans-serif;
+  }
+`;
 
 const Container = styled.div`
   text-align: center;
-  font-family: Pretendard, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -19,6 +26,22 @@ const Header = styled.header`
 
 const H1 = styled.h1`
   cursor: pointer;
+`;
+
+const ThemeToggleButton = styled.button`
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  img {
+    width: 1.5rem;
+    height: 1.5rem;
+
+    margin-left: 0.5rem;
+    margin-top: 0.3rem;
+
+    filter: ${(props) => (props.isDark ? 'invert(100%) brightness(200%)' : 'none')};
+  }
 `;
 
 const Nav = styled.nav`
@@ -40,6 +63,8 @@ const PrevWeekButton = styled.button`
 
   font-weight: 900;
   cursor: pointer;
+
+  color: ${(props) => props.theme.color};
 `;
 
 const PrevButton = styled.button`
@@ -52,6 +77,8 @@ const PrevButton = styled.button`
 
   font-weight: 900;
   cursor: pointer;
+
+  color: ${(props) => props.theme.color};
 `;
 
 const DateInput = styled.input`
@@ -62,9 +89,15 @@ const DateInput = styled.input`
   font-size: 1rem;
   font-family: Pretendard, sans-serif;
 
+  background-color: ${(props) => props.theme.inputBackground};
+  color: ${(props) => props.theme.color};
+
   &::-webkit-calendar-picker-indicator {
     margin-left: -0.5rem;
     cursor: pointer;
+
+    filter: ${(props) => (props.theme.mode === 'dark' ? 'invert(100%) brightness(200%)' : 'none')};
+    }
   }
 `;
 
@@ -78,6 +111,8 @@ const NextButton = styled.button`
 
   font-weight: 900;
   cursor: pointer;
+
+  color: ${(props) => props.theme.color};
 `;
 
 const NextWeekButton = styled.button`
@@ -89,6 +124,8 @@ const NextWeekButton = styled.button`
 
   font-weight: 900;
   cursor: pointer;
+
+  color: ${(props) => props.theme.color};
 `;
 
 const TodoCount = styled.span`
@@ -126,13 +163,13 @@ const TodoInput = styled.input`
     color: b8b8b8;
   }
 
-  /* 유효한 값일 때 형제 버튼 스타일 */
+  /* 유효한 값일 때 형제 버튼(+) 스타일 */
   &:valid + button {
-    color: black;
-    curosr: pointer;
+    color: ${(props) => (props.theme.mode === 'dark' ? '#fff' : 'black')};
+    cursor: pointer;
   }
 
-  /* 무효한 값일 때 형제 버튼 스타일 */
+  /* 무효한 값일 때 형제 버튼(+) 스타일 */
   &:invalid + button {
     color: grey;
     cursor: not-allowed;
@@ -149,7 +186,6 @@ const AppendButton = styled.button`
   font-size: 1.5rem;
 
   &:hover {
-    color: black;
     cursor: pointer;
   }
 `;
@@ -201,11 +237,7 @@ const DeleteButton = styled.button`
     color: #d1a29f;
   }
 
-  ${({ checked }) =>
-    checked &&
-    `
-     color: #8b8b8b;
-    `}
+  color: ${({ checked, theme }) => (checked ? '#8b8b8b' : theme.mode === 'dark' ? '#fff' : '#000')};
 `;
 
 function App() {
@@ -218,6 +250,10 @@ function App() {
     return `${yyyy}-${mm}-${dd}`;
   };
 
+  const [isDark, setIsDark] = useState(() => {
+    const savedThemeMode = sessionStorage.getItem('themeMode');
+    return savedThemeMode === 'dark' ? true : false;
+  });
   const [currentDate, setCurrentDate] = useState(() => sessionStorage.getItem('lastSelectedDate') || setToday());
   const [todoInput, setTodoInput] = useState('');
   const [todos, setTodos] = useState(() => {
@@ -226,6 +262,14 @@ function App() {
   });
   const list = todos[currentDate] || [];
   const todoCount = list.filter((todo) => !todo.checked).length;
+
+  // 테마
+  const toggleTheme = () =>
+    setIsDark((prev) => {
+      const themeMode = !prev;
+      sessionStorage.setItem('themeMode', themeMode ? 'dark' : 'light');
+      return themeMode;
+    });
 
   // 날짜 변경 (버튼)
   const changeDateButton = (days) => {
@@ -301,40 +345,49 @@ function App() {
   }, [todos]);
 
   return (
-    <Container>
-      <Header>
-        <H1 onClick={goToday}>Todo-List</H1>
-      </Header>
-      <Nav>
-        <PrevWeekButton onClick={() => changeDateButton(-7)}>&lt;&lt;</PrevWeekButton>
-        <PrevButton onClick={() => changeDateButton(-1)}>&lt;</PrevButton>
-        <DateInput type="date" value={currentDate} onChange={changeDateIcon} />
-        <NextButton onClick={() => changeDateButton(1)}>&gt;</NextButton>
-        <NextWeekButton onClick={() => changeDateButton(7)}>&gt;&gt;</NextWeekButton>
-        <TodoCount>{todoCount} 개</TodoCount>
-      </Nav>
-      <Main>
-        <InputContainer>
-          <TodoInput
-            placeholder="할 일을 입력해주세요"
-            value={todoInput}
-            onChange={(e) => setTodoInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            required
-          />
-          <AppendButton onClick={addTodo}>+</AppendButton>
-        </InputContainer>
-        {list.map((todo, index) => (
-          <ListContainer key={index}>
-            <CheckboxButton type="checkbox" checked={todo.checked} onChange={() => toggleTodo(index)} />
-            <TodoContent checked={todo.checked}>{todo.todoInputText}</TodoContent>
-            <DeleteButton checked={todo.checked} onClick={() => deleteTodo(index)}>
-              x
-            </DeleteButton>
-          </ListContainer>
-        ))}
-      </Main>
-    </Container>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <GlobalStyle />
+      <Container>
+        <Header>
+          <H1 onClick={goToday}>Todo-List</H1>
+          <ThemeToggleButton onClick={toggleTheme} isDark={isDark}>
+            <img
+              src={isDark ? '/themeIcon/sun.png' : '/themeIcon/moon.png'}
+              alt={isDark ? '라이트 모드' : '다크 모드'}
+            />
+          </ThemeToggleButton>
+        </Header>
+        <Nav>
+          <PrevWeekButton onClick={() => changeDateButton(-7)}>&lt;&lt;</PrevWeekButton>
+          <PrevButton onClick={() => changeDateButton(-1)}>&lt;</PrevButton>
+          <DateInput type="date" value={currentDate} onChange={changeDateIcon} />
+          <NextButton onClick={() => changeDateButton(1)}>&gt;</NextButton>
+          <NextWeekButton onClick={() => changeDateButton(7)}>&gt;&gt;</NextWeekButton>
+          <TodoCount>{todoCount} 개</TodoCount>
+        </Nav>
+        <Main>
+          <InputContainer>
+            <TodoInput
+              placeholder="할 일을 입력해주세요"
+              value={todoInput}
+              onChange={(e) => setTodoInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              required
+            />
+            <AppendButton onClick={addTodo}>+</AppendButton>
+          </InputContainer>
+          {list.map((todo, index) => (
+            <ListContainer key={index}>
+              <CheckboxButton type="checkbox" checked={todo.checked} onChange={() => toggleTodo(index)} />
+              <TodoContent checked={todo.checked}>{todo.todoInputText}</TodoContent>
+              <DeleteButton checked={todo.checked} onClick={() => deleteTodo(index)}>
+                x
+              </DeleteButton>
+            </ListContainer>
+          ))}
+        </Main>
+      </Container>
+    </ThemeProvider>
   );
 }
 
