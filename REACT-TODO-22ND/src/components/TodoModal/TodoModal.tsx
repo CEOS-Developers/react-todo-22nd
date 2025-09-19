@@ -18,6 +18,7 @@ import {
   TodoInput,
   AddButton
 } from '@/components/TodoModal/TodoModal.Styled';
+import { getCompletedCount, getIncompleteCount } from '@/utils/TodoModal/todoHelpers';
 
 const TodoModal = () => {
   const {
@@ -38,8 +39,8 @@ const TodoModal = () => {
   }
 
   const todos = getCurrentTodos();
-  const completedCount = todos.filter(todo => todo.completed).length;
-  const incompleteCount = todos.filter(todo => !todo.completed).length;
+  const completedCount = getCompletedCount(todos);
+  const incompleteCount = getIncompleteCount(todos);
 
   return (
     <ModalOverlay onClick={closeModal}>
