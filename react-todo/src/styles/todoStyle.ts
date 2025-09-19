@@ -81,3 +81,35 @@ export const CompleteButton = styled.button<{ completed: boolean }>`
     background-color: #ffb6c1;
   }
 `;
+
+// 날짜 네비게이션 전체 컨테이너
+export const DateNav = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0;
+`;
+
+// 날짜 좌/우 이동 버튼
+export const NavButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 4px;
+  border: none;
+  color: #3c3c3c;
+  &:hover {
+    color: #eb89b5;
+  }
+`;
+
+// 날짜 텍스트
+export const DateHeading = styled.h2`
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  color: #3c3c3c;
+`;

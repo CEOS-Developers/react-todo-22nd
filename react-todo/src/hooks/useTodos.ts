@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Todo } from "../types/todo";
+
+const STORAGE_KEY = "todos_by_date";
 
 export const useTodos = () => {
   const [todosForEachDay, setTodosForEachDay] = useState<{
     [key: string]: Todo[];
   }>({});
+
+  // localStorage에서 불러오기
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      setTodosForEachDay(JSON.parse(saved));
+    }
+  }, []);
+
+  // 바뀔때마다 localStorage 저장
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todosForEachDay));
+  }, [todosForEachDay]);
 
   // 투두 추가
   const addTodo = (dateKey: string, text: string) => {
