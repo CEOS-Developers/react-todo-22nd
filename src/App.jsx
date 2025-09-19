@@ -34,10 +34,24 @@ function App() {
       )
     );
   };
+  // 전체 투두 개수와 완료된 투두 개수 계산
+  const totalCount = todos.length;
+  const doneCount = todos.filter((todo) => todo.isDone).length;
+
   return (
     <AppContainer>
       <TodoList>
         <Title>Todo List</Title>
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "1rem",
+            fontWeight: 500,
+            color: "black",
+          }}
+        >
+          전체: {totalCount} | 완료: {doneCount}
+        </div>
 
         <WeekCalendar>
           <Day sunday>일</Day>
