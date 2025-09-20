@@ -47,11 +47,20 @@ function App() {
       [key]: (prev[key] || []).filter((t) => t.id !== id),
     }));
 
+  const doneCount = todos.filter((t) => t.done).length;
+  const todoCount = todos.length - doneCount;
+
   return (
     <>
       <h1 style={{ textAlign: "center" }}>To Do</h1>
       <Navbar date={date} setDate={setDate} />
-      <TodoInput onAdd={addTodo} />
+      <TodoInput
+        onAdd={addTodo}
+        date={date}
+        setDate={setDate}
+        todoCount={todoCount}
+        doneCount={doneCount}
+      />
       <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
     </>
   );

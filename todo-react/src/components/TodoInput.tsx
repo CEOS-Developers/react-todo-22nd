@@ -1,12 +1,25 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+type Props = {
+  onAdd: (text: string) => void;
+  date: Date;
+  setDate: (d: Date) => void;
+  todoCount: number;
+  doneCount: number;
+};
 
 export default function TodoInput({
   onAdd,
-}: {
-  onAdd: (text: string) => void;
-}) {
+  date,
+  setDate,
+  todoCount,
+  doneCount,
+}: Props) {
   const [text, setText] = useState("");
+  const [open, setOpen] = useState(false);
 
   const submit = () => {
     const x = text.trim();
@@ -23,7 +36,31 @@ export default function TodoInput({
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && submit()}
       />
-      <SubmitButton onClick={submit}>등록</SubmitButton>
+      <Right>
+        <IconButton type="button" onClick={() => setOpen((o) => !o)}>
+          📆
+        </IconButton>
+
+        <Badges>
+          <Badge>{todoCount} 개</Badge>
+          <Badge $ok>✅ {doneCount} 개</Badge>
+        </Badges>
+
+        <SubmitButton onClick={submit}>등록</SubmitButton>
+
+        {open && (
+          <Popup>
+            <DatePicker
+              selected={date}
+              onChange={(d) => {
+                if (d) setDate(d);
+                setOpen(false);
+              }}
+              inline
+            />
+          </Popup>
+        )}
+      </Right>
     </Container>
   );
 }
@@ -58,4 +95,38 @@ const SubmitButton = styled.button`
   color: white;
   font-weight: 800;
   cursor: pointer;
+`;
+
+const Right = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+`;
+
+const IconButton = styled.button`
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+`;
+
+const Badges = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+`;
+
+const Badge = styled.span<{ $ok?: boolean }>`
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  background: ${({ $ok }) => ($ok ? "#10b98122" : "#ffd54f55")};
+  color: ${({ $ok }) => ($ok ? "#0f766e" : "#1f2937")};
+`;
+const Popup = styled.div`
+  position: absolute;
+  top: 110%;
+  right: 0;
+  z-index: 1000;
 `;
