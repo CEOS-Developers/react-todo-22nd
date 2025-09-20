@@ -23,7 +23,7 @@ const Button = styled.button`
     border: none;
     border-radius: 5px;
     cursor: pointer;
-
+    width: 80px;
     &:hover { opacity: 0.8; }
 `;
 

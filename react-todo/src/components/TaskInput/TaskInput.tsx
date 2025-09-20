@@ -21,7 +21,8 @@ const Button = styled.button<{ hover?: boolean}>`
     border: none;
     border-radius: 5px;
     cursor: pointer;
-
+    width: 80px;
+    height: 40px;
     &:hover { opacity: 0.8; }
 `;
 

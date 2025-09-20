@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import React from 'react'
@@ -8,6 +8,10 @@ import Header from './components/Header/Header'
 import TaskInput from './components/TaskInput/TaskInput'
 import TaskList from './components/TaskList/TaskList'
 
+const STORAGE_KEY = 'todoByDate';
+
+const today = new Date().toISOString().split('T')[0];
+
 export type Todo = {
   id: string;
   text: string;
@@ -15,8 +19,27 @@ export type Todo = {
 };
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  type TodoByDate = Record<string, Todo[]>;
+  type Update = (prev: Todo[]) => Todo[];
+  // const [todos, setTodos] = useState<Todo[]>([]);
   const [mode, setMode] = useState<'all' | 'todo' | 'done'>('all');
+  const [selectedDate, setSelectedDate] = useState<string>(today);
+
+  //structure: [date: string]: todo[]
+  const [todosByDate, setTodosByDate] = useState<Record<string, Todo[]>>(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw): {};
+    } catch {
+      return {};
+    }
+  });
+
+  const todos = todosByDate[selectedDate] || [];
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todosByDate));
+  }, [todosByDate]);
 
   const todoCount = useMemo(() => {
     const done = todos.filter((task) => task.done).length;
@@ -30,9 +53,20 @@ function App() {
     return todos;
   }, [todos,mode]);
 
+  
+
+  const updateTodos = (date: string, update: Update) => {
+    if(!date) return;
+    setTodosByDate((prev) => {
+      const current = prev[date] ?? [];
+      const next = update(current);
+      return { ...prev, [date]: next};
+    });
+  };
+
   const addTodo = (text: string) => {
     if(!text.trim()) return;
-    setTodos((tasks) => [
+    updateTodos(selectedDate, tasks => [
       {
         id: Date.now().toString(),
         text: text.trim(),
@@ -43,18 +77,21 @@ function App() {
   };
 
   const toggleTodo = (id: string) => {
-    setTodos(tasks =>
+    updateTodos(selectedDate, tasks =>
     tasks.map(task =>
     task.id === id ? {...task, done: !task.done} : task));
   };
 
   const removeTodo = (id: string) => {
-    setTodos((tasks) => tasks.filter((task) => task.id !== id));
+    updateTodos(selectedDate, tasks => tasks.filter((task) => task.id !== id));
   };
 
   return (
     <>
       <GlobalStyle />
+      <div style={{marginBottom:'20px', textAlign:'center'}}>
+        <input type='date' value={selectedDate} onChange={(e)=> setSelectedDate(e.target.value)} />
+      </div>
       <Header
         total={todoCount.total}
         todo={todoCount.todo}
