@@ -49,7 +49,7 @@ function App() {
 
   return (
     <>
-      <h1>To Do</h1>
+      <h1 style={{ textAlign: "center" }}>To Do</h1>
       <Navbar date={date} setDate={setDate} />
       <TodoInput onAdd={addTodo} />
       <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
