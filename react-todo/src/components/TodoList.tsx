@@ -10,8 +10,11 @@ import {
 } from "../styles/todoStyle";
 
 export default function TodoList() {
+  // 커스텀 훅에서 todos 상태 조작 함수들 불러옴
   const { todosForEachDay, addTodo, toggleTodo, deleteTodo } = useTodos();
+  // 입력창 상태
   const [input, setInput] = useState("");
+  // 날짜 관련
   const [date, setDate] = useState(new Date());
   const dateKey = date.toISOString().slice(0, 10);
   const formattedDate = date.toLocaleDateString("ko-KR", {
@@ -21,15 +24,19 @@ export default function TodoList() {
     weekday: "long",
   });
 
+  // 현재 날짜의 todos 가져오기
   const todos = todosForEachDay[dateKey] || [];
+  // todos 개수 count
   const remainingCount = todos.filter((todo) => !todo.completed).length;
 
+  // 낳짜 이동 함수
   const changeDate = (days: number) => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
     setDate(newDate);
   };
 
+  // 할 일 추가 관련 (입력창 이용)
   const handleAdd = () => {
     if (!input.trim()) return;
     addTodo(dateKey, input.trim());
@@ -43,7 +50,9 @@ export default function TodoList() {
         <DateHeading>{formattedDate}</DateHeading>
         <NavButton onClick={() => changeDate(1)}>▶</NavButton>
       </DateNav>
+
       <p>오늘의 남은 할 일은 {remainingCount}개 입니다!</p>
+
       <TodoListWrapper>
         {todos.map((todo) => (
           <TodoItem

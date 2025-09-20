@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// 입력창 공간
 export const InputWrapper = styled.div`
   position: fixed;
   bottom: 5px;
@@ -18,6 +19,7 @@ export const InputWrapper = styled.div`
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
+// 입력창 공간
 export const TodoInput = styled.input`
   flex: 1;
   border: none;
@@ -28,6 +30,7 @@ export const TodoInput = styled.input`
   border-radius: 30px;
 `;
 
+// 추가 버튼
 export const AddButton = styled.button`
   width: 55px;
   height: 55px;

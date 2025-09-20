@@ -7,6 +7,7 @@ import {
 } from "../styles/todoStyle";
 import trashIcon from "../assets/trash.svg";
 
+// TodoItem 컴포넌트가 받을 props 타입 정의
 type Props = {
   todo: Todo;
   dateKey: string;
@@ -29,7 +30,9 @@ export default function TodoItem({
           toggleTodo(dateKey, todo.id);
         }}
       />
+
       <TodoText>{todo.text}</TodoText>
+
       <DeleteButton onClick={() => deleteTodo(dateKey, todo.id)}>
         <img src={trashIcon} alt="삭제" width={18} height={18} />
       </DeleteButton>
