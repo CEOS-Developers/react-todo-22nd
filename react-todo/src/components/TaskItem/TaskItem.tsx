@@ -14,7 +14,7 @@ const Item = styled.li<{done: boolean}>`
 
 const Text = styled.span<{done: boolean}>`
     text-decoration: ${({done}) => (done ? 'line-through' : 'none')};
-    color: ${({done}) => (done ? 'gray' : 'black')};
+    color: ${({done}) => (done ? 'red' : 'black')};
 `;
 
 const Button = styled.button`

@@ -26,16 +26,16 @@ const Button = styled.button<{ hover?: boolean}>`
 `;
 
 type Props = {
-    addTodo: (text: string) => void;
+    onAdd: (text: string) => void;
 };
 
-export default function TaskInput({ addTodo }: Props) {
+export default function TaskInput({ onAdd }: Props) {
     const [text, setText] = useState('');
 
     const enter = () => {
         const t = text.trim()
         if(!t) return;
-        addTodo(t);
+        onAdd(t);
         setText('');
     };
 

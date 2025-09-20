@@ -4,10 +4,9 @@ import viteLogo from '/vite.svg'
 import React from 'react'
 import './App.css'
 import { GlobalStyle } from './styles/GlobalStyles'
-import Header from './components/Header'
-import TaskInput from './components/TaskInput'
-import TaskItem from './components/TaskItem'
-import TaskList from './components/TaskList'
+import Header from './components/Header/Header'
+import TaskInput from './components/TaskInput/TaskInput'
+import TaskList from './components/TaskList/TaskList'
 
 export type Todo = {
   id: string;
@@ -46,7 +45,7 @@ function App() {
   const toggleTodo = (id: string) => {
     setTodos(tasks =>
     tasks.map(task =>
-    task.id === id ? {...TaskItem, done: !task.done} : task));
+    task.id === id ? {...task, done: !task.done} : task));
   };
 
   const removeTodo = (id: string) => {
@@ -63,6 +62,8 @@ function App() {
         filter={mode}
         onChangeFilter={setMode}
       />
+      <TaskInput onAdd={addTodo} />
+      <TaskList items={filtered} onToggle={toggleTodo} onRemove={removeTodo} />
     </>
   )
 }
