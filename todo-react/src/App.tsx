@@ -4,6 +4,7 @@ import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import { startDay, toKey } from "./utils";
 import type { Book } from "./types";
+import { GlobalStyle } from "./global";
 
 const STORAGE_KEY = "todo-react";
 
@@ -52,6 +53,8 @@ function App() {
 
   return (
     <>
+      <GlobalStyle />
+
       <h1 style={{ textAlign: "center" }}>To Do</h1>
       <Navbar date={date} setDate={setDate} />
       <TodoInput
