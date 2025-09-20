@@ -11,7 +11,7 @@ import {
 } from "./App.styles";
 
 function App() {
-  // 주 시작일(일요일) 구하는 함수
+  // 주 시작일(일요일)을 구하는 함수
   const getStartOfWeek = (date) => {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
