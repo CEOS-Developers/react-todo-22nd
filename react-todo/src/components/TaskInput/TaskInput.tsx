@@ -47,7 +47,9 @@ export default function TaskInput({ onAdd }: Props) {
                 placeholder='add a new task'
                 value={text}
                 onChange={(e) =>setText(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && enter()}
+                onKeyDown={(e) => {//한글 엔터 두번 해결
+                    if(e.key === 'Enter' && !(e.nativeEvent as any).isComposing)enter();
+                }}
             />
             <Button onClick={enter}>Enter</Button>
         </Row>
