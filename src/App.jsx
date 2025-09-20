@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AppContainer,
   TodoList,
@@ -27,7 +27,10 @@ function App() {
     today.setHours(0, 0, 0, 0);
     return today.getTime();
   });
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const saved = localStorage.getItem("todos");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [inputValue, setInputValue] = useState("");
 
   // 일~토 날짜 배열 만들기 (currentWeekStart 기준)
@@ -78,7 +81,9 @@ function App() {
     setCurrentWeekStart(startOfThisWeek);
     setSelectedDate(today.getTime());
   };
-
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
   return (
     <AppContainer>
       <TodoList>
@@ -197,6 +202,7 @@ function App() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addTodo()}
+            maxLength={40}
           />
           <button onClick={addTodo}>Add</button>
         </AddArea>
