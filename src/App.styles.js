@@ -14,7 +14,7 @@ export const AppContainer = styled.div`
 // Todo 리스트 박스
 export const TodoList = styled.div`
   background-color: white;
-  width: 40%;
+  width: 50%;
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
   border-radius: 2rem;
   background-color: white;
@@ -50,13 +50,8 @@ export const Day = styled.div.withConfig({
   border-radius: 2rem;
   color: ${(props) =>
     props.sunday ? "red" : props.saturday ? "blue" : "#5d3a00"};
-  cursor: pointer;
-
-  &:hover {
-    background-color: #d9d9d9;
-    color: ${(props) =>
-      props.sunday ? "red" : props.saturday ? "blue" : "white"};
-  }
+  width: 100%;
+  shrink: 0;
 `;
 
 // 입력 및 버튼 영역
@@ -111,7 +106,6 @@ export const TodoItem = styled.div`
   padding: 0.5rem;
   width: 25rem;
   height: 3rem;
-  border-radius: 1rem;
   border-bottom: 1px solid #d9d9d9;
   display: flex;
   align-items: center;

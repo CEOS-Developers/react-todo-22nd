@@ -11,13 +11,44 @@ import {
 } from "./App.styles";
 
 function App() {
+  // 주 시작일(일요일) 구하는 함수
+  const getStartOfWeek = (date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - d.getDay());
+    return d;
+  };
+
+  const [currentWeekStart, setCurrentWeekStart] = useState(() =>
+    getStartOfWeek(new Date())
+  );
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today.getTime();
+  });
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
+
+  // 일~토 날짜 배열 만들기 (currentWeekStart 기준)
+  const weekDates = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(currentWeekStart);
+    d.setDate(currentWeekStart.getDate() + i);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
 
   //투두 추가하기
   const addTodo = () => {
     if (inputValue.trim() === "") return;
-    setTodos([...todos, { text: inputValue, isDone: false }]);
+    setTodos([
+      ...todos,
+      {
+        text: inputValue,
+        isDone: false,
+        date: selectedDate,
+      },
+    ]);
     setInputValue("");
   };
 
@@ -34,14 +65,26 @@ function App() {
       )
     );
   };
+
   // 전체 투두 개수와 완료된 투두 개수 계산
   const totalCount = todos.length;
   const doneCount = todos.filter((todo) => todo.isDone).length;
 
+  // 제목 클릭 시 오늘 기준 이번 주로 이동
+  const TitleClick = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const startOfThisWeek = getStartOfWeek(today);
+    setCurrentWeekStart(startOfThisWeek);
+    setSelectedDate(today.getTime());
+  };
+
   return (
     <AppContainer>
       <TodoList>
-        <Title>Todo List</Title>
+        <Title onClick={TitleClick} style={{ cursor: "pointer" }}>
+          Todo List
+        </Title>
         <div
           style={{
             textAlign: "center",
@@ -54,44 +97,97 @@ function App() {
         </div>
 
         <WeekCalendar>
-          <Day sunday>일</Day>
-          <Day>월</Day>
-          <Day>화</Day>
-          <Day>수</Day>
-          <Day>목</Day>
-          <Day>금</Day>
-          <Day saturday>토</Day>
+          <button
+            style={{
+              background: "none",
+              border: "none",
+              fontSize: "1.5rem",
+              cursor: "pointer",
+              marginRight: "0.5rem",
+            }}
+            onClick={() => {
+              const prev = new Date(currentWeekStart);
+              prev.setDate(currentWeekStart.getDate() - 7);
+              setCurrentWeekStart(prev);
+              setSelectedDate(prev.getTime());
+            }}
+            aria-label="이전 주"
+          >
+            ◀
+          </button>
+          {"일월화수목금토".split("").map((day, i) => (
+            <Day
+              key={day}
+              sunday={i === 0}
+              saturday={i === 6}
+              style={{
+                cursor: "pointer",
+                fontWeight: weekDates[i].getTime() === selectedDate ? 700 : 400,
+                background:
+                  weekDates[i].getTime() === selectedDate
+                    ? "#f3e9ff"
+                    : "inherit",
+              }}
+              onClick={() => setSelectedDate(weekDates[i].getTime())}
+            >
+              <div style={{ fontSize: "0.9rem", color: "#888" }}>
+                {weekDates[i].getMonth() + 1}/{weekDates[i].getDate()}
+              </div>
+              <div>{day}</div>
+            </Day>
+          ))}
+          <button
+            style={{
+              background: "none",
+              border: "none",
+              fontSize: "1.5rem",
+              cursor: "pointer",
+              marginLeft: "0.5rem",
+            }}
+            onClick={() => {
+              const next = new Date(currentWeekStart);
+              next.setDate(currentWeekStart.getDate() + 7);
+              setCurrentWeekStart(next);
+              setSelectedDate(next.getTime());
+            }}
+            aria-label="다음 주"
+          >
+            ▶
+          </button>
         </WeekCalendar>
 
         <ListArea>
-          {todos.map((todo, index) => (
-            <TodoItem
-              key={index}
-              style={{
-                textDecoration: todo.isDone ? "line-through" : "none",
-                color: todo.isDone ? "#aaa" : "inherit",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={todo.isDone}
-                onChange={() => completeTodo(index)}
+          {todos
+            .map((todo, index) => ({ ...todo, index }))
+            .filter((todo) => todo.date === selectedDate)
+            .map((todo) => (
+              <TodoItem
+                key={todo.index}
                 style={{
-                  width: "20px",
-                  height: "20px",
-                  marginRight: "1rem",
-                  accentColor: "#6a0dad",
+                  textDecoration: todo.isDone ? "line-through" : "none",
+                  color: todo.isDone ? "#aaa" : "inherit",
                 }}
-              />
-              {todo.text}
-              <button
-                onClick={() => deleteTodo(index)}
-                style={{ marginLeft: "auto" }}
               >
-                ❌
-              </button>
-            </TodoItem>
-          ))}
+                <input
+                  type="checkbox"
+                  checked={todo.isDone}
+                  onChange={() => completeTodo(todo.index)}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    marginRight: "1rem",
+                    accentColor: "#6a0dad",
+                  }}
+                />
+                {todo.text}
+                <button
+                  onClick={() => deleteTodo(todo.index)}
+                  style={{ marginLeft: "auto" }}
+                >
+                  ❌
+                </button>
+              </TodoItem>
+            ))}
         </ListArea>
 
         <AddArea>
