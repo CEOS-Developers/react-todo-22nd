@@ -1,4 +1,3 @@
-import React from "react";
 import type { Todo } from "../types";
 import styled, { css } from "styled-components";
 
