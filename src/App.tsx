@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { toYYYYMMDD } from './utils/date'
-import DateNav from './components/dateNav'
+import DateNav from './components/DateNav'
 import TodoInput from './components/TodoInput'
 import TodoList from './components/TodoList'
 import type { Todo } from './types'
