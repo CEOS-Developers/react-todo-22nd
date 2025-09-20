@@ -25,6 +25,7 @@ function App() {
   }, [book]);
 
   const key = toKey(date);
+  const todos = book[key] || [];
 
   const addTodo = (text: string) =>
     setBook((prev) => ({
@@ -32,12 +33,26 @@ function App() {
       [key]: [...(prev[key] || []), { id: Date.now(), text, done: false }],
     }));
 
+  const toggleTodo = (id: number) =>
+    setBook((prev) => ({
+      ...prev,
+      [key]: (prev[key] || []).map((t) =>
+        t.id === id ? { ...t, done: !t.done } : t
+      ),
+    }));
+
+  const deleteTodo = (id: number) =>
+    setBook((prev) => ({
+      ...prev,
+      [key]: (prev[key] || []).filter((t) => t.id !== id),
+    }));
+
   return (
     <>
       <h1>To Do</h1>
       <Navbar date={date} setDate={setDate} />
       <TodoInput onAdd={addTodo} />
-      <TodoList />
+      <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
     </>
   );
 }
