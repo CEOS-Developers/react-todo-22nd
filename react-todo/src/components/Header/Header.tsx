@@ -9,11 +9,11 @@ const Container = styled.header`
     color: brown;
 `;
 
-const Button = styled.button<{ active?: boolean}>`
+const Button = styled.button<{ $active?: boolean}>`
     padding: 6px 10px;
     border: none;
-    background: ${({ active }) => (active ? 'brown' : 'orange')};
-    color: ${({ active }) => (active ? '#fff' : '#111')};
+    background: ${({ $active }) => ($active ? 'brown' : 'orange')};
+    color: ${({ $active }) => ($active ? '#fff' : '#111')};
     cursor: pointer;
 `;
 
@@ -32,7 +32,7 @@ export default function Header({ total, todo, done, filter, onChangeFilter }: Pr
             <p>Total: {total} | todo: {todo} | done: {done}</p>
             <div>
                 {(['all','todo','done'] as const).map((f) => (
-                    <Button key={f} active={filter === f} onClick={() => onChangeFilter(f)}>
+                    <Button key={f} $active={filter === f} onClick={() => onChangeFilter(f)}>
                     </Button>
                 ))}
             </div>

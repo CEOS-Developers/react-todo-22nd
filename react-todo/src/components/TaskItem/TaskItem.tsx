@@ -8,7 +8,7 @@ const Item = styled.li<{done: boolean}>`
     align-items: center;
     padding: 12px;
     border-radius: 5px;
-    border: 2px slid #ccc;
+    border: 2px solid #ccc;
     background: ${({done}) => (done ? '#eee' : '#fff')};
 `;
 
