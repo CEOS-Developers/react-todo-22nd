@@ -22,15 +22,24 @@ function App() {
   const [currentWeekStart, setCurrentWeekStart] = useState(() =>
     getStartOfWeek(new Date())
   );
+
+  //선택된 날짜 관리
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return today.getTime();
   });
+
   const [todos, setTodos] = useState(() => {
     const saved = localStorage.getItem("todos");
     return saved ? JSON.parse(saved) : [];
   });
+
+  //현재 선택된 날짜 개수 관리
+  const todosOfSelectedDate = todos.filter(
+    (todo) => todo.date === selectedDate
+  );
+
   const [inputValue, setInputValue] = useState("");
 
   // 일~토 날짜 배열 만들기 (currentWeekStart 기준)
@@ -60,7 +69,7 @@ function App() {
     setTodos(todos.filter((_, idx) => idx !== indexToDelete));
   };
 
-  //투두 완료표시하기
+  //투두 완료 체크 표시하기
   const completeTodo = (index) => {
     setTodos(
       todos.map((todo, idx) =>
@@ -70,8 +79,8 @@ function App() {
   };
 
   // 전체 투두 개수와 완료된 투두 개수 계산
-  const totalCount = todos.length;
-  const doneCount = todos.filter((todo) => todo.isDone).length;
+  const totalCount = todosOfSelectedDate.length;
+  const doneCount = todosOfSelectedDate.filter((todo) => todo.isDone).length;
 
   // 제목 클릭 시 오늘 기준 이번 주로 이동
   const TitleClick = () => {
