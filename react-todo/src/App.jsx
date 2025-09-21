@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import './App.css'; // 바닐라 style.css를 여기에 복사
+import './App.css'; 
 
 // Helpers
 const daysKo = [
